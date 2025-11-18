@@ -1,4 +1,4 @@
-package swagger
+package scalar
 
 import (
 	"embed"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//go:embed public
+//go:embed index.html
 var FS embed.FS
 
 func HandleOAPI(content []byte) http.HandlerFunc {

@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/fs"
 	"net/http"
 	"os"
 
@@ -13,7 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/jeroenrinzema/todo-shop/internal/store"
 	"github.com/jeroenrinzema/todo-shop/oapi"
-	"github.com/jeroenrinzema/todo-shop/pkg/swagger"
+	"github.com/jeroenrinzema/todo-shop/pkg/scalar"
 	"go.uber.org/zap"
 )
 
@@ -42,15 +41,9 @@ func run() error {
 	router := chi.NewRouter()
 	service := NewService(logger, store)
 
-	// NOTE: swagger UI
-	root, err := fs.Sub(swagger.FS, "public")
-	if err != nil {
-		return err
-	}
-
-	router.Handle("/public/*", http.FileServer(http.FS(swagger.FS)))
-	router.Handle("/openapi.yaml", swagger.HandleOAPI(resources))
-	router.Handle("/", http.FileServer(http.FS(root)))
+	// NOTE: Scalar UI
+	router.Handle("/openapi.yaml", scalar.HandleOAPI(resources))
+	router.Handle("/", http.FileServer(http.FS(scalar.FS)))
 
 	oapi.HandlerWithOptions(service, oapi.ChiServerOptions{
 		BaseRouter: router,

@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: TODO or Not TODO API
+  version: "1.0.0"
+  description: |
+    A simple TODO API for managing your procrastination professionally.
+    
+    Shakespeare once asked "To be or not to be?" — we ask "TODO or not TODO?"
+    Spoiler: Everything becomes a TODO eventually.
+paths:
+  /v1/users/{userId}/todos:
+    get:
+      operationId: listTodos
+      summary: List all TODOs for a user
+      description: |
+        Retrieves all TODOs for a specific user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully retrieved TODOs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodosList'
+        "404":
+          description: User not found
+        "500":
+          description: Server error (even our servers procrastinate sometimes)
+    post:
+      operationId: createTodo
+      summary: Create a new TODO
+      description: |
+        Add another item to your ever-growing list of things you'll definitely do... someday.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodo'
+      responses:
+        "201":
+          description: TODO created successfully
+          content:
+            application/json:
+              schema:
+                type: string
+        "400":
+          description: Invalid request (your TODO was too ambitious)
+        "404":
+          description: User not found
+        "500":
+          description: Server error
+  /v1/users/{userId}/todos/{todoId}:
+    delete:
+      operationId: deleteTodo
+      summary: Delete a TODO
+      description: |
+        Permanently remove a TODO from existence. It's like completing it, but without 
+        the pesky requirement of actually doing the work.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: integer
+        - name: todoId
+          in: path
+          required: true
+          description: The unique identifier of the TODO to delete
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: TODO successfully deleted (out of sight, out of mind)
+        "404":
+          description: TODO not found (already deleted by your past self?)
+        "500":
+          description: Server error
+
+components:
+  schemas:
+    TodosList:
+      type: object
+      properties:
+        todos:
+          type: array
+          items:
+            type: string
+        total:
+          type: integer
+      required: [todos, total]
+    
+    CreateTodo:
+      type: object
+      properties:
+        description:
+          type: string
+          description: What you're pretending you'll do
+          example: "Learn quantum physics by watching one YouTube video"
+      required: [description]
+    
+    UpdateTodo:
+      type: object
+      properties:
+        description:
+          type: string
+          description: The updated TODO description
+      required: [description]

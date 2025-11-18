@@ -14,7 +14,7 @@ Yes, it's that simple. We believe in getting you from zero to procrastination in
 
 ## Interview Assignment
 
-- [ ] Implement the delete endpoint
+- [ ] Implement the delete endpoint based on the TODO index
 - [ ] Make the store accessible for multiple users at the same time concurrently
 - [ ] Implement search in a performant manner
 
